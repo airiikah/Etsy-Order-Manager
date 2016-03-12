@@ -1,1 +1,29 @@
-body { padding-top:30px; }
+i {
+	padding: 2.7px;
+}
+
+.fa-check-square-o {
+	color: green;
+	padding-right: 0px;
+}
+
+li {
+	list-style-type: none;
+	font-size: 15px;
+}
+
+#customer_panel i:hover{
+	color: green;
+}
+
+.green {
+	background-color: lightgreen !important;
+}
+
+.red {
+	background-color: pink !important;
+}
+
+.blue {
+	background-color: lightblue !important;
+}

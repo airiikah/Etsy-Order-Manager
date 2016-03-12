@@ -1,22 +1,13 @@
-angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+angular.module('appRoutes', ['CustomerService', 'ListingService']).config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider, Customer, Listing) {
 
 	$routeProvider
 
 		// home page
 		.when('/', {
-			templateUrl: 'views/home.html',
+			templateUrl: 'views/main.html',
 			controller: 'MainController'
 		})
 
-		.when('/nerds', {
-			templateUrl: 'views/nerd.html',
-			controller: 'NerdController'
-		})
-
-		.when('/geeks', {
-			templateUrl: 'views/geek.html',
-			controller: 'GeekController'	
-		});
 
 	$locationProvider.html5Mode(true);
 
