@@ -1,4 +1,4 @@
-#"Up With The Times" Journal
+#Pumpkin Paper Co Etsy Order Manager
 
 ## Installation
 1. Download the repository
