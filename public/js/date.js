@@ -9,7 +9,8 @@ $(document).ready(function(){
 
 	$('#datetimepicker1').datetimepicker({
         format: 'MM/DD',
-        defaultDate: new Date().addDays(1)
+        defaultDate: new Date().addDays(1),
+        debug: true
     });
 
 

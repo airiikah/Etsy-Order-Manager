@@ -2,7 +2,7 @@
     <script src="js/date.js"></script>
 
 
-<div class="container">
+<div class="container-fluid" style="margin-left: 5%; margin-right: 5%">
 
 	<div class="row" style="margin-bottom: 20px;">
 	  <div class="span4"></div>
@@ -12,12 +12,12 @@
 
 	<div class="row">
 
-		<div class="col-sm-8" id="customer_panel">
+		<div class="col-sm-5" id="customer_panel">
 
 			<div class="panel panel-default">
 				<div class="panel-heading">
 
-					<div class='col-sm-3' style="float: right; padding-top: 10px;">
+					<div class='col-sm-4' style="float: right; padding-top: 10px;">
 			            <div class="form-group">
 			                <div class='input-group date' id='datetimepicker1'>
 			                    <input type='text' class="form-control" />
@@ -66,7 +66,7 @@
 
 		<!--========== PROGRESS ============-->
 
-		<div class="col-sm-4">
+		<div class="col-sm-7">
 
 
 			<div class="panel panel-default">
@@ -78,8 +78,10 @@
 
 				<div class="panel-body">
 
-					<ul class="list-group">
-						<li class="list-group-item" ng-repeat="listing in listings" ng-class="{gray: listing.total - listing.completed == 0 }">
+					<div class="row">
+
+					<ul class="col-sm-6" ng-repeat="listing in listings" ng-class="{gray: listing.total - listing.completed == 0 }">
+						<li class="list-group-item" >
 
 							<h4 style="margin-bottom: 5px;">{{listing.ppc}} - {{listing.nickname}}</h4>
 
@@ -89,15 +91,17 @@
 							<i class="fa fa-check-square-o fa-lg" ng-repeat="a in range(listing.completed) track by $index"></i>
 							<i class="fa fa-square-o fa-lg" ng-repeat="a in range(listing.total-listing.completed) track by $index"></i>
 
-							<hr />
-							<ul ng-repeat="variation in listing.allvariations" style="margin-left: 0">
+							<hr style="margin-top: 10px; margin-bottom: 10px;" />
+							<ul ng-repeat="variation in listing.allvariations" style="margin-left: 0px; padding-left: 0px;">
 
-								<li ng-class="{strike: variation.total - variation.completed == 0}">{{variation.formatted_value}} ({{variation.completed}}/{{variation.total}} completed)</li>
+								<li ng-class="{strike: variation.total - variation.completed == 0}">{{variation.formatted_value}} ({{variation.completed}} / {{variation.total}})</li>
 
 							</ul>
 
 						</li>
 					</ul>
+
+				</div>
 
 				</div>
 

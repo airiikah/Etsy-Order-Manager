@@ -24,3 +24,6 @@ li {
 	text-decoration: line-through;
 	color: #EC1B23;
 }
+.day.active {
+	background-color: #EC1B23 !important;
+}

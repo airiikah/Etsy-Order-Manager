@@ -229,6 +229,6 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
         });
     }
 
-    init();
+    //init();
 
 });
