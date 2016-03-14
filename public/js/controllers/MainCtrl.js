@@ -2,12 +2,13 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
 
 	$scope.customers = Customer.customers;
     $scope.listings = Listing.listings;
-	$scope.message = 'Messages here';
     $scope.chosen_date = '';
-    $scope.ship_date = moment().format('dddd, MMMM Do');
+    $scope.ship_date = '';
     $scope.loading = false;
     $scope.error = '';
 
+
+    // DATE PICKER LISTENER 
 
     $('#datetimepicker1').on('dp.change', function(e){
 
@@ -22,7 +23,6 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
             .error(function(e){
                 $scope.error = e;
             });
-
     })
 
     Date.prototype.addDays = function(days)
@@ -55,18 +55,13 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
         }
     }
 
-    function formatDate(date){
-        return date.getUTCDate();
-    }
-
-
     $scope.getReceipts = function(chosen_date, toFormat){
 
         clear();
 
         return $http.get('/getReceipts')
             .success(function(data) {
-                //console.log('calling storeData with', formatDate(chosen_date)  );
+
                 if (toFormat)
                     storeData(data, formatDate(chosen_date));
                 else 
@@ -104,27 +99,18 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
 
             receipt.Transactions.forEach( function(transaction) {
 
-                var re = /PPC[0-9]+/g; 
-                var m;
-                var ppc = 0;
-                while ((m = re.exec(transaction.title)) !== null) {
-                    if (m.index === re.lastIndex) {
-                        re.lastIndex++;
-                    }
-                    // View your result using the m-variable.
-                    // eg m[0] etc.
-                    ppc = m[0];
-                    ppc = ppc.replace('PPC', '');
-                }
+                var ppc = getPPC(transaction.title);
 
                 var theTotal = findTotal(receipts, transaction.listing_id, shipByDate);
-                console.log('creation date', transaction.creation_tsz)
-                console.log('comparing', getShipByDate(transaction.creation_tsz), shipByDate)
 
                 if (! Listing.getListing(transaction.listing_id) && (getShipByDate(transaction.creation_tsz) == shipByDate) ){
+
                     var nickname = Listing.getNickname(Number(ppc));
-                    Listing.listings.push({ppc: ppc, nickname: nickname, listing_id: transaction.listing_id, completed: 0, total: theTotal});
+                    Listing.listings.push({ppc: ppc, nickname: nickname, listing_id: transaction.listing_id, completed: 0, total: theTotal, variation: transaction.variations, allvariations: []});
+
                 }
+                if ( getShipByDate(transaction.creation_tsz) == shipByDate )
+                    Listing.addVariations(transaction.listing_id, transaction.variations, transaction.quantity);
 
             })
         })
@@ -145,24 +131,13 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
             var listings = [];
             receipt.Transactions.forEach( function(transaction){
                 var listing_id = transaction.listing_id;
-                //var re = /PPC[0-9]+/g;
-                var re = /PPC[0-9]+/g; 
-                var m;
-                var ppc = 0;
-                while ((m = re.exec(transaction.title)) !== null) {
-                    if (m.index === re.lastIndex) {
-                        re.lastIndex++;
-                    }
-                    // View your result using the m-variable.
-                    // eg m[0] etc.
-                    ppc = m[0];
-                    ppc = ppc.replace('PPC', '');
-                }
+                var ppc = getPPC(transaction.title);
 
                 if (!Customer.getListing(customer_id, listing_id) && (getShipByDate(transaction.creation_tsz) == shipByDate) ){
                     var theTotal = findTotal(receipts, transaction.listing_id);
                     var nickname = Listing.getNickname(Number(ppc));
-                    listings.push( {listing_id: listing_id, ppc: ppc, nickname: nickname, done: false, checked: 0, quantity: transaction.quantity, total: theTotal} );
+
+                    listings.push( {listing_id: listing_id, ppc: ppc, nickname: nickname, done: false, checked: 0, quantity: transaction.quantity, total: theTotal, variations: transaction.variations} );
                 }
 
             });
@@ -193,8 +168,6 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
 
     $scope.toggleCheckListing = function(customer, listing, checkbox){
 
-    	console.log('this', $(checkbox.currentTarget).hasClass('fa-square-o') )
-
     	if (!$(checkbox.currentTarget).hasClass('fa-square-o')) {
 
     		Listing.decrementListing(listing);
@@ -220,15 +193,35 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
     	}
     }
 
-    	// helpers
+    // helpers ================================
+
 	$scope.range = function(n) {
         return new Array(n);
     };
 
+    function formatDate(date){
+        return date.getUTCDate();
+    }
+
+    function getPPC(str){
+        var re = /PPC[0-9]+/g; 
+        var m;
+        var ppc = 0;
+        while ((m = re.exec(str)) !== null) {
+            if (m.index === re.lastIndex) {
+                re.lastIndex++;
+            }
+            ppc = m[0];
+            ppc = ppc.replace('PPC', '');
+        }
+        return ppc;
+    }
+
+    // fill view with tomorrow's data
+
     function init(){
         $scope.loading = true;
         var tomorrow = new Date().addDays(1).getDate();
-        //$scope.ship_date = moment(new Date().addDays(3)).format('dddd, MMMM Do');
         $scope.ship_date = 'Tomorrow';
         $scope.getReceipts(tomorrow, false )
         .success(function(){
@@ -236,6 +229,6 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
         });
     }
 
-    //init();
+    init();
 
 });

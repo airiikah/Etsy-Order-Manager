@@ -52,6 +52,7 @@ angular.module('CustomerService', ['ListingService']).factory('Customer', ['$htt
                 for(var i = 0; i < amount; i++){
 
                     Listing.incrementListing(listing);
+
                     checkOffListing(customer, listing);
 
                 }
@@ -81,7 +82,7 @@ angular.module('CustomerService', ['ListingService']).factory('Customer', ['$htt
                 console.log('loop', curr);
                 console.log('i', i)
                 unCheckListing(customer, curr);
-                Listing.decrementListing(curr)
+                Listing.decrementListing(curr);
             }
 
         }
@@ -105,6 +106,7 @@ angular.module('CustomerService', ['ListingService']).factory('Customer', ['$htt
                 if (o.customers[i].listings[j].listing_id == listing.listing_id) {
 
                     o.customers[i].listings[j].checked++;
+                    Listing.incrementVariation(listing);
 
                     if (listing.quantity - listing.checked == 0){
                         o.customers[i].listings[j].done = true;
@@ -125,6 +127,7 @@ angular.module('CustomerService', ['ListingService']).factory('Customer', ['$htt
                 if (o.customers[i].listings[j].listing_id == listing.listing_id) {
 
                     o.customers[i].listings[j].checked--;
+                    Listing.decrementVariation(listing);
                     o.customers[i].listings[j].done = false;
                     break;
                 }

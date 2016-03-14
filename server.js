@@ -12,13 +12,15 @@ var url 			= require('url')
 var etsyjs 			= require('etsy-js')
 var async			= require('async')
 
+require('./env');
+
 var Promise = require("bluebird");
 
 //instantiate client with key and secret and set callback url
 var client = etsyjs.client({
-  key: 's3ir0jkinm38ip0zcoz1d9ii',
-  secret: 'y9vz5stc7e',
-  callbackURL: 'http://localhost:8080/authorise'
+  key: process.env.CLIENT_KEY,
+  secret: process.env.CLIENT_SECRET,
+  callbackURL: process.env.BASE_URL+'/authorise'
 });
 
 // config for etsy
@@ -74,7 +76,7 @@ app.get('/getReceipts', function(req, res) {
 
 	var getReceipts = new Promise(function(resolve, reject){
 
-		client.auth('b5ed115993f6882021a945f29d964c', 'a0d43379aa').get('/shops/pumpkinpaperco/receipts/open', {limit: 100, includes: 'Transactions'}, function(err, status, body, headers) {
+		client.auth(process.env.CONSUMER_KEY, process.env.CONSUMER_SECRET).get('/shops/'+process.env.SHOP_NAME+'/receipts/open', {limit: 100, includes: 'Transactions'}, function(err, status, body, headers) {
 
 		    if (err) {
 		      console.log(err);
@@ -90,10 +92,31 @@ app.get('/getReceipts', function(req, res) {
 		res.send(receipts);
 	});
 
-
 });
 
+app.get('/test', function(req, res) {
+	console.log(req.session.token);
+	console.log(req.session.sec);
 
+	var getReceipts = new Promise(function(resolve, reject){
+
+		client.auth(process.env.CONSUMER_KEY, process.env.CONSUMER_SECRET).get('/shops/'+process.env.SHOP_NAME+'/receipts/open', {limit: 100, includes: 'Transactions'}, function(err, status, body, headers) {
+
+		    if (err) {
+		      console.log(err);
+		    }
+		    if (body) {
+		    	resolve(body.results);
+		    }
+	    
+  		})
+	});
+
+	getReceipts.then( function(receipts){
+		res.send(receipts);
+	});
+
+});
 
 // start app ===============================================
 app.listen(port);	
