@@ -1,36 +1,24 @@
-angular.module('CustomerService', ['ListingService']).factory('Customer', ['$http', 'Listing', function($http, Listing) {
+angular.module('CustomerService', ['ListingService']).factory('Customer', ['$http', '$filter', 'Listing', function($http, $filter, Listing) {
 
-	var o = {
-
-		customers : [
-
-			{
-				id: 1, name: 'Rachel Johnson', note: '', 
-                listings: [
-                    {
-                        id: 1, nickname: 'Movie Night', total: 3, quantity: 1, checked: 0, done: false
-                    },
-                    {
-                        id: 3, nickname: 'Rainy Day', total: 3, quantity: 3, checked: 0, done: false
-                    }
-                ],
-                done: false
-			},
-			{
-                id: 2, name: 'Iris West', note: 'I want one that looks like the flash!',
-                listings: [
-                    {
-                        id: 2, nickname: 'Terra Coffee', total: 3, quantity: 1, checked: 0, done: false
-                    }
-                ],
-                done: false
-            },
-
-		]
-    };
+    var o = {
+        customers: []
+    }
 
     function getAllCustomers(){
     	return o.customers;
+    }
+
+    function getCustomer(id){
+         return $filter('filter')(o.customers, {id: id})[0];
+    }
+
+    function getListing(customer_id, id){
+        var customer = getCustomer(customer_id);
+        if (customer){
+            return $filter('filter')(customer.listings, {listing_id: id})[0];
+        }
+        return false;
+        
     }
 
     function markCustomerAsDone(customer){
@@ -114,7 +102,7 @@ angular.module('CustomerService', ['ListingService']).factory('Customer', ['$htt
 
             for (var j=0; j < o.customers[i].listings.length; j++) {
 
-                if (o.customers[i].listings[j].id == listing.id) {
+                if (o.customers[i].listings[j].listing_id == listing.listing_id) {
 
                     o.customers[i].listings[j].checked++;
 
@@ -134,7 +122,7 @@ angular.module('CustomerService', ['ListingService']).factory('Customer', ['$htt
         for (var i=0; i < o.customers.length; i++) {
           if (o.customers[i].id == customer.id) {
             for (var j=0; j < o.customers[i].listings.length; j++) {
-                if (o.customers[i].listings[j].id == listing.id) {
+                if (o.customers[i].listings[j].listing_id == listing.listing_id) {
 
                     o.customers[i].listings[j].checked--;
                     o.customers[i].listings[j].done = false;
@@ -153,6 +141,10 @@ angular.module('CustomerService', ['ListingService']).factory('Customer', ['$htt
         return true;
     }
 
+    function addCustomer(customer){
+        o.customers.push(customer);
+    }
+
 
    o.getAllCustomers = getAllCustomers;
    o.checkOffCustomer = checkOffCustomer;
@@ -162,6 +154,9 @@ angular.module('CustomerService', ['ListingService']).factory('Customer', ['$htt
    o.allListingsChecked = allListingsChecked;
    o.markCustomerAsDone = markCustomerAsDone;
    o.markCustomerAsNotDone = markCustomerAsNotDone;
+   o.addCustomer = addCustomer;
+   o.getListing = getListing;
+   o.getCustomer = getCustomer;
 
     return o;
 

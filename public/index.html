@@ -8,10 +8,13 @@
 
 	<!-- JS -->
 	<script src="libs/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="libs/moment/min/moment.min.js"></script> <!-- datepicker -->
+    <script type="text/javascript" src="libs/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 	<script src="libs/bootstrap/dist/js/bootstrap.min.js"></script>
 
 	<!-- CSS -->
 	<link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="libs/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" /> <!-- datepicker -->
 	<link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/style.css"> <!-- custom styles -->
 
@@ -27,7 +30,7 @@
 	<script src="js/app.js"></script>
 </head>
 
-<body ng-app="sampleApp" style="margin-top: 20px;">
+<body ng-app="sampleApp" style="margin-top: 20px;" id="MainController" ng-controller="MainController">
 <div class="container">
 
 

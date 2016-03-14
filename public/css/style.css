@@ -3,7 +3,7 @@ i {
 }
 
 .fa-check-square-o {
-	color: green;
+	color: #EC1B23;
 	padding-right: 0px;
 }
 
@@ -13,11 +13,11 @@ li {
 }
 
 #customer_panel i:hover{
-	color: green;
+	color: #EC1B23;
 }
 
 .green {
-	background-color: lightgreen !important;
+	background-color: #F5F5F5 !important;
 }
 
 .red {

@@ -5,7 +5,7 @@ angular.module('appRoutes', ['CustomerService', 'ListingService']).config(['$rou
 		// home page
 		.when('/', {
 			templateUrl: 'views/main.html',
-			controller: 'MainController'
+			controller: 'MainController',
 		})
 
 
