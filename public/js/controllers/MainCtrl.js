@@ -87,9 +87,6 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
         return $http.post('/sendEmail', data).success(function(data, status) {
             if (data == 'success'){
 
-                //$('#send_email').removeClass('btn-default');
-                //$('#send_email').addClass('btn-success');
-
                 $('#send_email').removeClass('btn-default');
                 $('#send_email').text('Done!');
                 $('#send_email').removeClass('btn-primary');
@@ -100,9 +97,6 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
                     $('#send_email').text('Email me');
                     next();
                 });
-
-               // $('send_email').removeClass('btn-success').delay(1000);
-                //$('send_email').addClass('btn-default').delay(1000);
 
             }
         })

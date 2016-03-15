@@ -5,16 +5,15 @@ var app            = express();
 //var mongoose       = require('mongoose');
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
-var Promise 	   = require("bluebird");
+var Promise 	     = require("bluebird");
 
 // Etsy ===================================================
-var session 		= require('express-session')
-var cookieParser 	= require('cookie-parser')
-var url 			= require('url')
-var etsyjs 			= require('etsy-js')
-var async			= require('async')
-var nodemailer 		= require('nodemailer');
-var fs 				= require('fs');
+var session 		   = require('express-session')
+var cookieParser 	 = require('cookie-parser')
+var url 			     = require('url')
+var etsyjs 			   = require('etsy-js')
+var async			     = require('async')
+var nodemailer 		 = require('nodemailer');
 
 // MAIL ============================================
 var transporter = nodemailer.createTransport({

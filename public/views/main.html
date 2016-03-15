@@ -49,7 +49,7 @@
 
 					<div id="customers">
 
-						<div ng-repeat="customer in customers | reverse" ng-hide="customer.done && clear_selected == true">
+						<div ng-repeat="customer in customers" ng-hide="customer.done && clear_selected == true">
 							<i class="fa fa-square-o fa-lg customer_checkbox" style="padding-bottom: 0px;" ng-click="toggleCheckCustomer(customer)"></i>
 							<h4 style="display: inline-block;">{{ customer.name }}</h4>
 							<ul>
@@ -90,7 +90,7 @@
 
 					<div class="row">
 
-					<ul class="col-sm-6" ng-repeat="listing in listings | reverse">
+					<ul class="col-sm-6" ng-repeat="listing in listings">
 						<li class="list-group-item" ng-class="{gray: listing.total - listing.completed == 0 }" ng-hide="listing.total - listing.completed == 0 && clear_selected == true">
 
 							<h4 style="margin-bottom: 5px;">{{listing.ppc}} - {{listing.nickname}}</h4>
