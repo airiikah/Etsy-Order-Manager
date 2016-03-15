@@ -6,6 +6,7 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
     $scope.ship_date = '';
     $scope.loading = false;
     $scope.error = '';
+    $scope.clear_selected = false;
 
 
     // DATE PICKER LISTENER 
@@ -74,6 +75,38 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
             });
 
     }
+
+    $scope.sendEmail = function() {
+
+        $('#send_email').removeClass('btn-default');
+        $('#send_email').addClass('btn-primary');
+        $('#send_email').text('Sending...');
+
+        var data = {html: $("#customers").html(), ship_date: $scope.ship_date };
+        console.log('html', data)
+        return $http.post('/sendEmail', data).success(function(data, status) {
+            if (data == 'success'){
+
+                //$('#send_email').removeClass('btn-default');
+                //$('#send_email').addClass('btn-success');
+
+                $('#send_email').removeClass('btn-default');
+                $('#send_email').text('Done!');
+                $('#send_email').removeClass('btn-primary');
+
+                $("#send_email").addClass("btn-success").delay(2000).queue(function(next){
+                    $("#send_email").removeClass("btn-success");
+                    $('send_email').addClass('btn-default');
+                    $('#send_email').text('Email me');
+                    next();
+                });
+
+               // $('send_email').removeClass('btn-success').delay(1000);
+                //$('send_email').addClass('btn-default').delay(1000);
+
+            }
+        })
+    } 
 
     function findTotal(receipts, listingId, shipByDate){
 
@@ -229,6 +262,6 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
         });
     }
 
-    //init();
+    init();
 
 });

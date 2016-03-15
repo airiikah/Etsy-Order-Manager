@@ -17,7 +17,6 @@ angular.module('ListingService', []).factory('Listing', ['$http', '$filter', fun
   }
 
   function incrementVariation(listing){
-    //listing.variations[0].completed++;
       for (var i=0; i < o.listings.length; i++) {
         if (o.listings[i].listing_id == listing.listing_id) {
 
@@ -40,7 +39,6 @@ angular.module('ListingService', []).factory('Listing', ['$http', '$filter', fun
 
           o.listings[i].allvariations.forEach( function(v){
             if ( (listing.variations[0] != undefined) && (v.value_id == listing.variations[0].value_id ) ){
-              //if (v.completed > 0)
               v.completed--;
             }
           })

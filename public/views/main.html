@@ -17,6 +17,8 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 
+					<button class="btn btn-default" ng-click="sendEmail()" id="send_email" style="float: right; margin-top: 10px;">Email me</button>
+
 					<div class='col-sm-4' style="float: right; padding-top: 10px;">
 			            <div class="form-group">
 			                <div class='input-group date' id='datetimepicker1'>
@@ -39,22 +41,26 @@
 					<img src="img/heart.svg" class="center-block" ng-show="loading" />
 
 					<div ng-hide="loading || customers.length > 0">
-						<h2 style="text-align: center">No orders for tomorrow!</h2>
+						<h2 style="text-align: center">No orders!</h2>
 						<h3 style="text-align: center; color: #EC1B23">Relax and watch some Gilmore Girls!</h3>
 					</div>
 
 					<h4 ng-show="error">{{error}}</h4>
 
-					<div ng-repeat="customer in customers">
-						<i class="fa fa-square-o fa-lg customer_checkbox" style="padding-bottom: 0px;" ng-click="toggleCheckCustomer(customer)"></i>
-						<h4 style="display: inline-block;">{{ customer.name }}</h4>
-						<ul>
-							<p ng-show="customer.note"><span style="font-weight: 500">Note: </span>{{customer.note}}</p>
-							<li ng-repeat="listing in customer.listings"><i class="fa fa-square-o listing_checkbox" ng-click="toggleCheckListing(customer, listing, $event)" ng-repeat="a in range(listing.quantity) track by $index"></i> <span style="font-weight: 700; font-size: 18px; color: #EC1B23">{{listing.quantity}}</span><b> - {{listing.ppc}}</b> - {{listing.nickname}} <span style="font-size: 12px">({{listing.total}} total)</span>
+					<div id="customers">
 
-								<p ng-repeat="variation in listing.variations">{{variation.formatted_name}}: {{variation.formatted_value}}</p>
-							</li>
-						</ul>
+						<div ng-repeat="customer in customers | reverse" ng-hide="customer.done && clear_selected == true">
+							<i class="fa fa-square-o fa-lg customer_checkbox" style="padding-bottom: 0px;" ng-click="toggleCheckCustomer(customer)"></i>
+							<h4 style="display: inline-block;">{{ customer.name }}</h4>
+							<ul>
+								<p ng-show="customer.note"><span style="font-weight: 500">Note: </span>{{customer.note}}</p>
+								<li ng-repeat="listing in customer.listings"><i class="fa fa-square-o listing_checkbox" ng-click="toggleCheckListing(customer, listing, $event)" ng-repeat="a in range(listing.quantity) track by $index"></i> <span style="font-weight: 700; font-size: 18px; color: #EC1B23">{{listing.quantity}}</span><b> - PPC {{listing.ppc}}</b> - {{listing.nickname}}
+
+									<p ng-repeat="variation in listing.variations">{{variation.formatted_name}}: {{variation.formatted_value}}</p>
+								</li>
+							</ul>
+
+						</div>
 
 					</div>
 				</div>
@@ -70,9 +76,13 @@
 
 
 			<div class="panel panel-default">
+
 				<div class="panel-heading">
 					<p style="float: right; padding-top: 10px;" >{{listings.length}} total</p>
-					<h3 class="panel-title-sm" style="margin-top: 5px; margin-bottom: 5px;">Progress</h3>
+					<h3 class="panel-title-sm" style="margin-top: 5px; margin-bottom: 5px; display: inline-block">Progress</h3>
+					<button class="btn btn-default" id="clear_completed" ng-click="clear_selected = true" style="display: inline-block; margin-left: 10px; margin-top: -5px">Hide Completed</button>
+					<button class="btn btn-default" id="show_completed" ng-click="clear_selected = false" style="display: inline-block; margin-left: 10px; margin-top: -5px">Show Completed</button>
+
 				</div>
 
 
@@ -80,8 +90,8 @@
 
 					<div class="row">
 
-					<ul class="col-sm-6" ng-repeat="listing in listings" ng-class="{gray: listing.total - listing.completed == 0 }">
-						<li class="list-group-item" >
+					<ul class="col-sm-6" ng-repeat="listing in listings | reverse">
+						<li class="list-group-item" ng-class="{gray: listing.total - listing.completed == 0 }" ng-hide="listing.total - listing.completed == 0 && clear_selected == true">
 
 							<h4 style="margin-bottom: 5px;">{{listing.ppc}} - {{listing.nickname}}</h4>
 

@@ -1,9 +1,11 @@
+require('./env');
 // modules =================================================
 var express        = require('express');
 var app            = express();
-var mongoose       = require('mongoose');
+//var mongoose       = require('mongoose');
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
+var Promise 	   = require("bluebird");
 
 // Etsy ===================================================
 var session 		= require('express-session')
@@ -11,10 +13,32 @@ var cookieParser 	= require('cookie-parser')
 var url 			= require('url')
 var etsyjs 			= require('etsy-js')
 var async			= require('async')
+var nodemailer 		= require('nodemailer');
+var fs 				= require('fs');
 
-require('./env');
+// MAIL ============================================
+var transporter = nodemailer.createTransport({
 
-var Promise = require("bluebird");
+	service: 'gmail',
+	host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // use SSL
+    auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASS
+    }
+
+}); // used to send mail
+
+// verify connection configuration
+transporter.verify(function(error, success) {
+   if (error) {
+        console.log(error);
+   } else {
+        console.log('Server is ready to take our messages');
+   }
+});  
+// =========================================
 
 //instantiate client with key and secret and set callback url
 var client = etsyjs.client({
@@ -71,8 +95,6 @@ app.get('/authorise', function(req, res) {
 });
 
 app.get('/getReceipts', function(req, res) {
-	console.log(req.session.token);
-	console.log(req.session.sec);
 
 	var getReceipts = new Promise(function(resolve, reject){
 
@@ -94,29 +116,28 @@ app.get('/getReceipts', function(req, res) {
 
 });
 
-app.get('/test', function(req, res) {
-	console.log(req.session.token);
-	console.log(req.session.sec);
+app.post('/sendEmail', function(req, res) {
 
-	var getReceipts = new Promise(function(resolve, reject){
+	var html = req.body.html;
+	var date = req.body.ship_date;
 
-		client.auth(process.env.CONSUMER_KEY, process.env.CONSUMER_SECRET).get('/shops/'+process.env.SHOP_NAME+'/receipts/open', {limit: 100, includes: 'Transactions'}, function(err, status, body, headers) {
+	var mailData = {
+	    from: process.env.EMAIL,
+	    to: process.env.EMAIL,
+	    subject: 'Orders - Ship by '+date,
+	    html: html
+	};
 
-		    if (err) {
-		      console.log(err);
-		    }
-		    if (body) {
-		    	resolve(body.results);
-		    }
-	    
-  		})
-	});
+	transporter.sendMail(mailData, function(data, response){
+		if (data) res.send(data)
+		else res.send('success');
+	})
 
-	getReceipts.then( function(receipts){
-		res.send(receipts);
-	});
+
 
 });
+
+
 
 // start app ===============================================
 app.listen(port);	

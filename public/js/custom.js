@@ -1,3 +1,8 @@
+// $(document).on("click", "#clear_completed", function() {
+// 	//alert('hey')
+// 	$('.fa-check-square-o').hide();
+// });
+
 $(document).on("click", "i", function() {
   console.log($(this));
 
