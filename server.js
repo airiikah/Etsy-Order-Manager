@@ -13,30 +13,30 @@ var cookieParser 	 = require('cookie-parser')
 var url 			     = require('url')
 var etsyjs 			   = require('etsy-js')
 var async			     = require('async')
-var nodemailer 		 = require('nodemailer');
+//var nodemailer 		 = require('nodemailer');
 
 // MAIL ============================================
-var transporter = nodemailer.createTransport({
+// var transporter = nodemailer.createTransport({
 
-	service: 'gmail',
-	host: 'smtp.gmail.com',
-    port: 465,
-    secure: true, // use SSL
-    auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASS
-    }
+// 	service: 'gmail',
+// 	host: 'smtp.gmail.com',
+//     port: 465,
+//     secure: true, // use SSL
+//     auth: {
+//         user: process.env.EMAIL,
+//         pass: process.env.EMAIL_PASS
+//     }
 
-}); // used to send mail
+// }); // used to send mail
 
 // verify connection configuration
-transporter.verify(function(error, success) {
-   if (error) {
-        console.log(error);
-   } else {
-        console.log('Server is ready to take our messages');
-   }
-});  
+// transporter.verify(function(error, success) {
+//    if (error) {
+//         console.log(error);
+//    } else {
+//         console.log('Server is ready to take our messages');
+//    }
+// });  
 // =========================================
 
 //instantiate client with key and secret and set callback url
@@ -55,7 +55,7 @@ app.use(session());
 // config files
 //var db = require('./config/db');
 
-var port = process.env.PORT || 8080; // set our port
+var port = process.env.PORT || 3010; // set our port
 //mongoose.connect('mongodb://localhost/journal'); // connect to our mongoDB database (commented out after you enter in your own credentials)
 
 // get all data/stuff of the body (POST) parameters
@@ -115,26 +115,26 @@ app.get('/getReceipts', function(req, res) {
 
 });
 
-app.post('/sendEmail', function(req, res) {
+// app.post('/sendEmail', function(req, res) {
 
-	var html = req.body.html;
-	var date = req.body.ship_date;
+// 	var html = req.body.html;
+// 	var date = req.body.ship_date;
 
-	var mailData = {
-	    from: process.env.EMAIL,
-	    to: process.env.EMAIL,
-	    subject: 'Orders - Ship by '+date,
-	    html: html
-	};
+// 	var mailData = {
+// 	    from: process.env.EMAIL,
+// 	    to: process.env.EMAIL,
+// 	    subject: 'Orders - Ship by '+date,
+// 	    html: html
+// 	};
 
-	transporter.sendMail(mailData, function(data, response){
-		if (data) res.send(data)
-		else res.send('success');
-	})
+// 	transporter.sendMail(mailData, function(data, response){
+// 		if (data) res.send(data)
+// 		else res.send('success');
+// 	})
 
 
 
-});
+// });
 
 
 
