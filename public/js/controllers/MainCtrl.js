@@ -1,6 +1,6 @@
 angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('MainController', function($scope, $http, Customer, Listing) {
 
-	$scope.customers = Customer.customers;
+    $scope.customers = Customer.customers;
     $scope.listings = Listing.listings;
     $scope.chosen_date = '';
     $scope.ship_date = '';
@@ -152,7 +152,15 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
         receipts.forEach( function(receipt){
             var id = customer_id;
             var name = receipt.name;
-            var note = receipt.message_from_buyer;
+            var note =  receipt.message_from_buyer;
+            //script for replacing commonly used unicode characters.
+            if(note != null)
+            {
+                note = note.replace("&#39;","'");
+                note = note.replace("&#706;","<");
+                note = note.replace("&#707;",">");
+                note = note.replace("&#819;", "=");
+            }
             var done = false;
 
             var listings = [];
@@ -176,53 +184,53 @@ angular.module('MainCtrl', ['CustomerService', 'ListingService']).controller('Ma
 
     }
 
-	// CUSTOMER =========================================
+    // CUSTOMER =========================================
 
     $scope.toggleCheckCustomer = function(customer){
 
-    	if (customer.done == true) {
-    		Customer.unCheckCustomer(customer);
-    		$scope.message = customer.name+' - '+'done? '+customer.done;
-    	}
+        if (customer.done == true) {
+            Customer.unCheckCustomer(customer);
+            $scope.message = customer.name+' - '+'done? '+customer.done;
+        }
 
-    	else {
-    		Customer.checkOffCustomer(customer);
-    		$scope.message = customer.name+' - '+'done? '+customer.done;
-    	}
+        else {
+            Customer.checkOffCustomer(customer);
+            $scope.message = customer.name+' - '+'done? '+customer.done;
+        }
     }
 
     // LISTINGS =========================================
 
     $scope.toggleCheckListing = function(customer, listing, checkbox){
 
-    	if (!$(checkbox.currentTarget).hasClass('fa-square-o')) {
+        if (!$(checkbox.currentTarget).hasClass('fa-square-o')) {
 
-    		Listing.decrementListing(listing);
-    		Customer.unCheckListing(customer, listing);
-    		Customer.markCustomerAsNotDone(customer);
+            Listing.decrementListing(listing);
+            Customer.unCheckListing(customer, listing);
+            Customer.markCustomerAsNotDone(customer);
 
-    		// if all of the customers listings have been checked, then check off the customer
-    		if (Customer.allListingsChecked(customer)){
-    			Customer.markCustomerAsDone(customer);
-    		}
-    		else Customer.markCustomerAsNotDone(customer);
-    	}
+            // if all of the customers listings have been checked, then check off the customer
+            if (Customer.allListingsChecked(customer)){
+                Customer.markCustomerAsDone(customer);
+            }
+            else Customer.markCustomerAsNotDone(customer);
+        }
 
-    	else {
-    		Listing.incrementListing(listing);
-    		Customer.checkOffListing(customer, listing);
+        else {
+            Listing.incrementListing(listing);
+            Customer.checkOffListing(customer, listing);
 
-    		// if all of the customers listings have been checked, then check off the customer
-    		if (Customer.allListingsChecked(customer)){
-    			Customer.markCustomerAsDone(customer);
-    		}
-    		else Customer.markCustomerAsNotDone(customer);
-    	}
+            // if all of the customers listings have been checked, then check off the customer
+            if (Customer.allListingsChecked(customer)){
+                Customer.markCustomerAsDone(customer);
+            }
+            else Customer.markCustomerAsNotDone(customer);
+        }
     }
 
     // helpers ================================
 
-	$scope.range = function(n) {
+    $scope.range = function(n) {
         return new Array(n);
     };
 
